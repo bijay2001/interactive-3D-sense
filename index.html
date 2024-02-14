@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <title>Interactive 3D Scene</title>
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+ <style>
+  body {
+   background-color: #f0f0f0;
+   font-family: Arial, sans-serif;
+   margin: 0;
+   padding: 0;
+  }
+  header {
+   background-color: #333;
+   color: #fff;
+   display: flex;
+   align-items: center;
+   height: 60px;
+   padding: 0 20px;
+  }
+  main {
+   display: flex;
+   flex-wrap: wrap;
+   justify-content: center;
+   padding: 20px;
+  }
+  canvas {
+   height: 400px;
+   width: 100%;
+  }
+  button {
+   background-color: #333;
+   border: none;
+   border-radius: 5px;
+   color: #fff;
+   cursor: pointer;
+   font-size: 16px;
+   margin-top: 20px;
+   padding: 10px 20px;
+  }
+  button:hover {
+   background-color: #666;
+  }
+ </style>
+</head>
+<body>
+ <header>
+  <h1>Interactive 3D Scene</h1>
+ </header>
+ <main>
+  <canvas id="myCanvas"></canvas>
+  <button id="colorButton">ADD COLOR</button>
+ </main>
+ <footer>
+  <p>&copy; Interactive 3D Scene</p>
+ </footer>
+ <script>
+  // Create scene, camera and renderer
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+  const renderer = new THREE.WebGLRenderer({canvas: document.getElementById("myCanvas")});
+
+  // Create cube and add to scene
+  const geometry = new THREE.BoxGeometry();
+  const material = new THREE.MeshBasicMaterial({color:0xff00ff});
+  const cube = new THREE.Mesh(geometry, material);
+  scene.add(cube);
+
+  // Add lighting to scene
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+  scene.add(ambientLight);
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+  scene.add(directionalLight);
+
+  // Set camera position
+  camera.position.z = 4;
+
+  // Render the scene
+  function animate() {
+   requestAnimationFrame(animate);
+   cube.rotation.x += 0.03;
+   cube.rotation.y += 0.03;
+   renderer.render(scene, camera);
+  }
+  animate();
+
+  // Change color of cube when button is clicked
+  const colorButton = document.getElementById("colorButton");
+  colorButton.addEventListener("click", () => {
+   const randomColor = Math.floor(Math.random()*16777215).toString(16);
+   cube.material.color.set("#" + randomColor);
+   
+   // Play sound effect
+   const sound = new Howl({
+    src: ['https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3']
+   });
+   sound.play();
+  });
+ </script>
+</body>
+</html>
